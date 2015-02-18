@@ -126,7 +126,11 @@ def do_invite(db, tf_uid, tf_key,
                 logging.info('inviting %s', applicant['email'])
             except slacker.Error as e:
                 logging.error('slacker error: %s', e)
-                pass
+                if str(e) in ['already_in_team',
+                              'already_invited',
+                              'invalid_email',
+                              'sent_recently']:
+                    d['emails'].add(applicant['email'])
 
         else:
             if cnt < 1000:
